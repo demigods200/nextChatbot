@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -12,6 +11,7 @@ export default function Home() {
           <div className="p-6 rounded-lg bg-white shadow-md border border-gray-100">
             <h2 className="text-xl font-semibold mb-3 text-[#0078D4]">Places</h2>
             <p className="text-gray-600">Discover restaurants, cafes, parks, and attractions in your area</p>
+            
           </div>
           <div className="p-6 rounded-lg bg-white shadow-md border border-gray-100">
             <h2 className="text-xl font-semibold mb-3 text-[#0078D4]">Products</h2>
