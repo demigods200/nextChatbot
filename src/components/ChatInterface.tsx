@@ -9,6 +9,30 @@ interface Message {
   timestamp: number;
 }
 
+interface ChatContext {
+  userInfo: {
+    [key: string]: string;
+  };
+  conversationHistory: Message[];
+}
+
+// Initialize context from localStorage or create new
+const initializeChatContext = (): ChatContext => {
+  if (typeof window === 'undefined') return { userInfo: {}, conversationHistory: [] };
+  
+  const savedContext = localStorage.getItem('chatContext');
+  return savedContext 
+    ? JSON.parse(savedContext)
+    : { userInfo: {}, conversationHistory: [] };
+};
+
+// Save context to localStorage
+const saveChatContext = (context: ChatContext) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('chatContext', JSON.stringify(context));
+  }
+};
+
 const formatTimeAgo = (timestamp: number): string => {
   const now = Date.now();
   const diffInSeconds = Math.floor((now - timestamp) / 1000);
@@ -33,8 +57,25 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [chatContext, setChatContext] = useState<ChatContext>(initializeChatContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load saved messages on mount
+  useEffect(() => {
+    const context = initializeChatContext();
+    setMessages(context.conversationHistory);
+  }, []);
+
+  // Save messages to context whenever they change
+  useEffect(() => {
+    const newContext = {
+      ...chatContext,
+      conversationHistory: messages
+    };
+    setChatContext(newContext);
+    saveChatContext(newContext);
+  }, [messages]);
 
   // Update timestamps every minute
   useEffect(() => {
@@ -85,12 +126,27 @@ const ChatInterface = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: input.trim() }),
+        body: JSON.stringify({ 
+          message: input.trim(),
+          context: chatContext
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to get response');
 
       const data = await response.json();
+      
+      // Update context with any new information extracted by the AI
+      if (data.updatedContext) {
+        setChatContext(prevContext => ({
+          ...prevContext,
+          userInfo: {
+            ...prevContext.userInfo,
+            ...data.updatedContext
+          }
+        }));
+      }
+
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: data.message,
