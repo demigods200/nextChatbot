@@ -17,7 +17,7 @@ const ChatBot = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-16 right-0 w-[360px] h-[540px] bg-white rounded-lg shadow-2xl"
+            className="absolute bottom-16 right-0 w-[450px] h-[540px] bg-white rounded-lg shadow-2xl"
           >
             <div className="flex items-center justify-between p-4 bg-[#0078D4] text-white rounded-t-lg">
               <div>

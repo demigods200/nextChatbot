@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -175,16 +176,33 @@ const ChatInterface = () => {
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
         {messages.length === 0 && (
-          <div className="text-center text-gray-500 mt-8">
-            <p className="text-lg font-semibold">Welcome to Tipsiti Assistant!</p>
-            <p className="text-sm mt-2">Ask me about:</p>
-            <div className="mt-4 space-y-2 text-[#0078D4]">
-              <p>🏠 Places to visit</p>
-              <p>🛍️ Products to buy</p>
-              <p>👥 People to connect with</p>
-              <p>🌆 Cities to explore</p>
+          <div className="text-center text-gray-600 mt-8">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 max-w-md mx-auto">
+              <div className="w-12 h-12 bg-[#0078D4] rounded-full flex items-center justify-center mx-auto mb-4">
+                <ChatBubbleLeftRightIcon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#0078D4] mb-2">Welcome to Tipsiti Assistant! 👋</h3>
+              <p className="text-sm mb-4">I'm here to help you discover amazing places, products, people, and cities.</p>
+              <div className="space-y-2 text-sm">
+                <p className="flex items-center justify-center gap-2 text-gray-700">
+                  <span className="w-5 text-center">🏠</span>
+                  <span>Find the best local spots and attractions</span>
+                </p>
+                <p className="flex items-center justify-center gap-2 text-gray-700">
+                  <span className="w-5 text-center">🛍️</span>
+                  <span>Discover great products and deals</span>
+                </p>
+                <p className="flex items-center justify-center gap-2 text-gray-700">
+                  <span className="w-5 text-center">👥</span>
+                  <span>Connect with local experts and services</span>
+                </p>
+                <p className="flex items-center justify-center gap-2 text-gray-700">
+                  <span className="w-5 text-center">🌆</span>
+                  <span>Explore new cities and neighborhoods</span>
+                </p>
+              </div>
+              <p className="text-sm mt-4 text-gray-500">How can I assist you today?</p>
             </div>
-            <p className="text-sm mt-4">How can I help you discover something amazing today?</p>
           </div>
         )}
         {messages.map((message, index) => (
@@ -232,30 +250,28 @@ const ChatInterface = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-gray-100">
-        <div className="flex space-x-2 items-end">
-          <div className="flex-1 relative">
+        <div className="relative flex border border-gray-200 rounded-xl focus-within:border-[#0078D4] focus-within:ring-1 focus-within:ring-[#0078D4] transition-colors overflow-hidden">
+          <div className="flex-grow pr-2">
             <textarea
               ref={textareaRef}
               rows={1}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about places, products, people, or cities..."
-              className="w-full px-4 py-2 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#0078D4] focus:border-transparent resize-none min-h-[40px] max-h-[150px] pr-12"
+              placeholder="Ask anything about your travell..."
+              className="w-full px-4 py-3 resize-none min-h-[50px] max-h-[200px] focus:outline-none text-sm placeholder:text-sm border-none bg-transparent"
             />
-            <div className="absolute right-3 bottom-2 text-xs text-gray-400">
-              Press Enter to send
-              <br />
-              Shift + Enter for new line
-            </div>
           </div>
-          <button
-            type="submit"
-            disabled={isLoading || !input.trim()}
-            className="bg-[#0078D4] text-white p-2 rounded-full hover:bg-[#106EBE] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-          >
-            <PaperAirplaneIcon className="w-5 h-5" />
-          </button>
+          <div className="w-[2px] my-2 bg-gray-200"></div>
+          <div className="px-3 flex items-center">
+            <button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="bg-[#0078D4] text-white p-2.5 rounded-lg hover:bg-[#106EBE] hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              <PaperAirplaneIcon className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </form>
     </div>
